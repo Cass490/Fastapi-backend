@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pydantic
+google-cloud-bigquery
+google-oauth2-tool
+python-dotenv
+datetime
+spacy
+requests
+typing
