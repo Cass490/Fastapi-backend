@@ -25,7 +25,7 @@ COPY useful-melody-444213-m6-740751a2e0de.json /app/useful-melody-444213-m6-7407
 
 
 # FastAPI port
-EXPOSE 8000
+EXPOSE 8080
 
 # Command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
