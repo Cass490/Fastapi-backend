@@ -9,7 +9,6 @@ from datetime import datetime
 import re
 import json
 
-
 # Load environment variables
 load_dotenv('key.env')
 
@@ -70,7 +69,8 @@ def extract_key_concepts(text):
         return []
     doc = nlp(text)
     return list(set(token.lemma_.lower() for token in doc if token.pos_ in ["NOUN", "PROPN"] and len(token.text) > 2))
-
+    
+#to check how much of the UMLS clinically accurate definition's content is reflected in Gemini's structured output
 def validate_response_coverage(umls_definition, gemini_response, threshold=0.4):
     """
     Validate that Gemini's response aligns with UMLS concepts.
@@ -97,9 +97,6 @@ def validate_response_coverage(umls_definition, gemini_response, threshold=0.4):
     print(f"Matching Concepts: {matching_concepts}")
     print(f"Concept Coverage: {coverage * 100:.2f}%")
     return coverage
-
-
-import re
 
 def parse_gemini_response(response_text):
     """
@@ -152,6 +149,7 @@ def query_gemini(term, simplified_explanation, max_attempts=3):
     umls_data = fetch_umls_data(term)
     umls_definition = umls_data['definitions'][0] if umls_data['definitions'] else ''
 
+    #If coverage is satisfactory and matches UMLS definition the response is returned; otherwise, the loop tries to regenerate it
     for attempt in range(max_attempts):
         try:
             # Craft prompt for Gemini
@@ -224,13 +222,7 @@ def query_gemini(term, simplified_explanation, max_attempts=3):
         "term": term,
         "medical_details": {
             "simple_explanation": f"Could not generate an explanation for {term}",
-            "signs_to_notice": [],
-            "care_advice": [],
-            "doctor_consultation_advice": ""
         },
         "error": "Could not generate an accurate medical explanation",
         "fallback_explanation": simplified_explanation
     }
-# After generating the response
-    print("Full API Response:", response.json())
-    print("Raw Gemini Response Text:", gemini_response_text) 
